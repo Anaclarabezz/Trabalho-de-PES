@@ -1,0 +1,411 @@
+/* ===========================
+   HOTEL BYGIRLS
+   Cores:
+   Azul Escuro: #0F4C81
+   Azul Médio : #4F81BD
+   Azul Claro : #DCEEFF
+   Creme      : #F8F3E7
+=============================*/
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Arial, sans-serif;
+}
+
+
+/* ===========================
+   FUNDO DA PÁGINA
+============================= */
+
+body{
+
+    background:
+
+    linear-gradient(
+        rgba(15,76,129,0.55),
+        rgba(15,76,129,0.55)
+    ),
+
+    url("/static/imagens/hotel.jpg");
+
+
+    background-size:cover;
+
+    background-position:center;
+
+    background-repeat:no-repeat;
+
+
+    min-height:100vh;
+
+    width:100%;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    font-family:'Segoe UI', Arial, sans-serif;
+
+}
+
+
+/* ===========================
+   CAIXA CENTRAL
+============================= */
+
+.container{
+
+    width:400px;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.25);
+
+    text-align:center;
+
+}
+
+
+/* ===========================
+   TÍTULOS
+============================= */
+
+.container h1{
+
+    color:#0F4C81;
+
+    margin-bottom:30px;
+
+    font-size:35px;
+
+}
+
+
+.container h2{
+
+    color:#4F81BD;
+
+    margin-bottom:25px;
+
+}
+
+
+.subtitulo{
+
+    color:#555;
+
+    margin-bottom:25px;
+
+}
+
+
+/* ===========================
+   BOTÕES DO MENU
+============================= */
+
+.menu-button-container{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin:15px 0;
+
+}
+
+
+.menu-button{
+
+    display:block;
+
+    width:280px;
+
+    padding:15px;
+
+    background:#4F81BD;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:10px;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    transition:0.3s;
+
+}
+
+
+.menu-button:hover{
+
+    background:#0F4C81;
+
+    transform:scale(1.05);
+
+}
+
+
+/* ===========================
+   FORMULÁRIOS
+============================= */
+
+form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+
+.form-row{
+
+    display:flex;
+
+    flex-direction:column;
+
+    text-align:left;
+
+}
+
+
+label{
+
+    color:#0F4C81;
+
+    font-weight:bold;
+
+    margin-bottom:5px;
+
+}
+
+
+input,
+select,
+textarea{
+
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    border:1px solid #DCEEFF;
+
+    font-size:15px;
+
+}
+
+
+input:focus,
+select:focus,
+textarea:focus{
+
+    outline:none;
+
+    border:2px solid #4F81BD;
+
+}
+
+
+/* ===========================
+   BOTÕES DOS FORMULÁRIOS
+============================= */
+
+button{
+
+    width:280px;
+
+    padding:15px;
+
+    margin:auto;
+
+    background:#4F81BD;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    background:#0F4C81;
+
+}
+
+
+/* ===========================
+   VOLTAR AO MENU
+============================= */
+
+.button-container{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+
+/* ===========================
+   MENSAGENS
+============================= */
+
+.mensagem-sucesso{
+
+    margin-top:20px;
+
+    padding:15px;
+
+    background:#d1fae5;
+
+    color:#166534;
+
+    border-radius:10px;
+
+}
+
+
+.mensagem-erro{
+
+    margin-top:20px;
+
+    padding:15px;
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+    border-radius:10px;
+
+}
+
+
+/* ===========================
+   TABELA DE RESERVAS
+============================= */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:20px;
+
+}
+
+
+th{
+
+    background:#0F4C81;
+
+    color:white;
+
+    padding:12px;
+
+}
+
+
+td{
+
+    padding:10px;
+
+    border-bottom:1px solid #ddd;
+
+}
+
+
+tr:nth-child(even){
+
+    background:#F8F3E7;
+
+}
+
+
+/* ===========================
+   RESPONSIVIDADE
+============================= */
+
+@media(max-width:600px){
+
+
+    .container{
+
+        width:90%;
+
+        padding:25px;
+
+    }
+
+
+    .menu-button,
+    button{
+
+        width:100%;
+
+    }
+
+}
+/* Botões abaixo do login */
+.links-abaixo{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-top: 25px;
+
+}
+
+.links-abaixo p{
+
+    margin-bottom: 25px;
+
+    text-align: center;
+
+}
+
+.links-abaixo .menu-button{
+
+    width: 280px;
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+}

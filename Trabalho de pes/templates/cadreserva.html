@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva - Hotel ByGirls</title>
+    <link rel="stylesheet" href="/static/estilo.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Hotel ByGirls</h1>
+    <h2>Cadastro de Reserva</h2>
+
+    <form action="/cadreserva" method="POST">
+
+        <div class="form-row">
+            <label>Data de Check-in</label>
+            <input
+                type="date"
+                name="checkin"
+                required>
+        </div>
+
+        <div class="form-row">
+            <label>Data de Check-out</label>
+            <input
+                type="date"
+                name="checkout"
+                required>
+        </div>
+
+       <div class="form-row">
+
+    <div class="form-row">
+
+<label>Quantidade de Hóspedes</label>
+
+<input
+type="number"
+id="hospedes"
+name="hospedes"
+min="1"
+max="10"
+placeholder="Quantidade de hóspedes"
+required>
+
+</div>
+
+
+<div class="form-row">
+
+<label>Opções de Hospedagem</label>
+
+<select
+id="quarto"
+name="quarto"
+required>
+
+<option value="">
+Informe a quantidade de hóspedes
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-row">
+
+<label>Valor da diária</label>
+
+<input
+type="text"
+id="valorDiaria"
+name="valorDiaria"
+readonly>
+
+</div>
+<div class="form-row">
+
+    <label>Valor Total da Hospedagem</label>
+
+    <input
+        type="text"
+        id="valorTotal"
+        name="valorTotal"
+        readonly>
+
+</div>
+        <div class="form-row">
+            <label>Observações</label>
+
+            <textarea
+                name="observacoes"
+                rows="4"
+                placeholder="Ex.: cama de casal, quarto silencioso, acessibilidade..."></textarea>
+        </div>
+
+        <div class="button-container">
+            <button type="submit">Confirmar Reserva</button>
+
+            <a href="/" class="menu-button">
+                Voltar ao Menu
+            </a>
+        </div>
+
+        {% if mensagem_sucesso %}
+        <div class="mensagem-sucesso">
+            {{ mensagem_sucesso }}
+        </div>
+        {% endif %}
+
+        {% if mensagem_erro %}
+        <div class="mensagem-erro">
+            {{ mensagem_erro }}
+        </div>
+        {% endif %}
+
+    </form>
+
+</div>
+
+<script>
+
+const hospedes = document.getElementById("hospedes");
+const quarto = document.getElementById("quarto");
+const valor = document.getElementById("valorDiaria");
+
+const checkin = document.querySelector('input[name="checkin"]');
+const checkout = document.querySelector('input[name="checkout"]');
+
+const valorTotal = document.getElementById("valorTotal");
+
+
+// coloque aqui fora para ficar disponível em todo o script
+let precoDiaria = 0;
+
+
+
+hospedes.addEventListener("input", function(){
+
+
+let pessoas = Number(this.value);
+
+
+quarto.innerHTML="";
+
+valor.value="";
+valorTotal.value="";
+
+
+if(pessoas <=0){
+    return;
+}
+
+
+
+let opcoes=[];
+
+
+// 1 solteiro por pessoa
+if(pessoas <=4){
+
+opcoes.push([
+pessoas+" Quartos Solteiro",
+pessoas*100
+]);
+
+}
+
+
+
+// quarto casal
+if(pessoas % 2 == 0 && pessoas/2 <=3){
+
+opcoes.push([
+(pessoas/2)+" Quartos Casal",
+(pessoas/2)*320
+]);
+
+}
+
+
+
+// quarto triplo
+if(pessoas <=3){
+
+opcoes.push([
+"1 Quarto Triplo",
+450
+]);
+
+}
+
+
+
+// suíte master
+if(pessoas <=4){
+
+opcoes.push([
+"1 Suíte Master",
+569
+]);
+
+}
+
+
+
+// combinações
+
+if(pessoas==4){
+
+opcoes.push([
+"1 Triplo + 1 Solteiro",
+550
+]);
+
+}
+
+
+
+if(pessoas==5){
+
+opcoes.push([
+"1 Suíte Master + 1 Solteiro",
+669
+]);
+
+
+opcoes.push([
+"1 Triplo + 1 Casal",
+770
+]);
+
+}
+
+
+
+if(pessoas==6){
+
+opcoes.push([
+"2 Quartos Triplos",
+900
+]);
+
+
+opcoes.push([
+"3 Quartos Casal",
+960
+]);
+
+}
+
+
+
+
+opcoes.forEach(function(item){
+
+
+let option=document.createElement("option");
+
+
+option.value=item[0];
+
+
+// guarda o preço da opção
+option.dataset.preco=item[1];
+
+
+option.text=
+item[0]+" - R$ "+item[1]+",00/dia";
+
+
+quarto.appendChild(option);
+
+
+});
+
+
+});
+
+
+
+
+// quando escolher o quarto
+quarto.addEventListener("change",function(){
+
+
+precoDiaria =
+Number(this.options[this.selectedIndex].dataset.preco);
+
+
+
+valor.value =
+"R$ "+precoDiaria.toFixed(2).replace(".",",")+"/dia";
+
+
+
+calcularTotal();
+
+
+
+});
+
+
+
+
+
+function calcularTotal(){
+
+
+if(
+checkin.value=="" ||
+checkout.value=="" ||
+precoDiaria==0
+){
+
+valorTotal.value="";
+
+return;
+
+}
+
+
+
+let dataEntrada = new Date(checkin.value);
+
+let dataSaida = new Date(checkout.value);
+
+
+
+let tempo = dataSaida - dataEntrada;
+
+
+
+let quantidadeDias =
+tempo/(1000*60*60*24);
+
+
+
+if(quantidadeDias <=0){
+
+valorTotal.value="Data inválida";
+
+return;
+
+}
+
+
+
+let total =
+precoDiaria * quantidadeDias;
+
+
+
+valorTotal.value =
+"R$ "+total.toFixed(2).replace(".",",");
+
+
+
+}
+
+
+
+
+checkin.addEventListener("change", calcularTotal);
+
+checkout.addEventListener("change", calcularTotal);
+
+
+
+</script>
+
+</body>
+</html>
