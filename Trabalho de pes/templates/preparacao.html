@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Preparação do Hotel - Hotel ByGirls</title>
+
+    <link rel="stylesheet"
+          href="/static/estilo.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    {% if acesso_negado %}
+
+        <h1>🏨 Hotel ByGirls</h1>
+
+        <h2>Acesso restrito</h2>
+
+        <div class="mensagem-erro">
+
+            Você não tem permissão para acessar
+            a preparação do hotel.
+
+        </div>
+
+        <div class="button-container">
+
+            <a href="/" class="menu-button">
+                Voltar ao Menu
+            </a>
+
+        </div>
+
+
+    {% else %}
+
+        <h1>🏨 Hotel ByGirls</h1>
+
+        <h2>Preparação do Hotel</h2>
+
+        <p class="subtitulo">
+
+            Consulte as chegadas previstas
+            para uma determinada data.
+
+        </p>
+
+
+        <!-- Escolha da data -->
+
+        <form action="/preparacao" method="GET">
+
+            <div class="form-row">
+
+                <label for="data">
+                    Data de chegada
+                </label>
+
+                <input
+                    type="date"
+                    id="data"
+                    name="data"
+                    value="{{ data_consulta or '' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="button-container">
+
+                <button type="submit">
+                    Consultar
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- Mensagem de erro -->
+
+        {% if mensagem_erro %}
+
+            <div class="mensagem-erro">
+
+                {{ mensagem_erro }}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- Resultado da consulta -->
+
+        {% if data_consulta %}
+
+
+            {% if total_reservas > 0 %}
+
+                <div class="resumo-preparacao">
+
+                    <h3>
+                        Preparação para {{ data_consulta }}
+                    </h3>
+
+
+                    <div class="cards-preparacao">
+
+
+                        <div class="card-preparacao">
+
+                            <strong>
+                                {{ total_reservas }}
+                            </strong>
+
+                            <span>
+                                Reservas chegando
+                            </span>
+
+                        </div>
+
+
+                        <div class="card-preparacao">
+
+                            <strong>
+                                {{ total_hospedes }}
+                            </strong>
+
+                            <span>
+                                Hóspedes
+                            </span>
+
+                        </div>
+
+
+                        <div class="card-preparacao">
+
+                            <strong>
+                                {{ total_adultos }}
+                            </strong>
+
+                            <span>
+                                Adultos
+                            </span>
+
+                        </div>
+
+
+                        <div class="card-preparacao">
+
+                            <strong>
+                                {{ total_criancas }}
+                            </strong>
+
+                            <span>
+                                Crianças
+                            </span>
+
+                        </div>
+
+
+                        <div class="card-preparacao">
+
+                            <strong>
+                                {{ total_hospedes }}
+                            </strong>
+
+                            <span>
+                                Toalhas
+                            </span>
+
+                        </div>
+
+
+                        <div class="card-preparacao">
+
+                            <strong>
+                                {{ total_hospedes }}
+                            </strong>
+
+                            <span>
+                                Cafés da manhã
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- Lista das reservas -->
+
+                <h3 style="margin-top: 30px;">
+
+                    Detalhes das chegadas
+
+                </h3>
+
+
+                <div style="overflow-x: auto;">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Hóspede
+                                </th>
+
+                                <th>
+                                    Check-in
+                                </th>
+
+                                <th>
+                                    Check-out
+                                </th>
+
+                                <th>
+                                    Hóspedes
+                                </th>
+
+                                <th>
+                                    Crianças
+                                </th>
+
+                                <th>
+                                    Quarto
+                                </th>
+
+                                <th>
+                                    Observações
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for reserva in reservas %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ reserva.nome }}
+                                    </td>
+
+                                    <td>
+                                        {{ reserva.checkin }}
+                                    </td>
+
+                                    <td>
+                                        {{ reserva.checkout }}
+                                    </td>
+
+                                    <td>
+                                        {{ reserva.hospedes }}
+                                    </td>
+
+                                    <td>
+                                        {{ reserva.criancas }}
+                                    </td>
+
+                                    <td>
+                                        {{ reserva.quarto }}
+                                    </td>
+
+                                    <td>
+                                        {{ reserva.observacoes or '' }}
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- Orientações para o hotel -->
+
+                <div class="mensagem-sucesso">
+
+                    <strong>
+                        Preparação sugerida:
+                    </strong>
+
+                    <br><br>
+
+                    🛏️ Verificar os quartos das reservas.
+
+                    <br><br>
+
+                    🧺 Separar
+                    <strong>
+                        {{ total_hospedes }}
+                    </strong>
+                    toalhas.
+
+                    <br><br>
+
+                    ☕ Preparar
+                    <strong>
+                        {{ total_hospedes }}
+                    </strong>
+                    cafés da manhã.
+
+                    <br><br>
+
+                    👨‍👩‍👧 Conferir a quantidade de adultos
+                    e crianças.
+
+                </div>
+
+
+            {% else %}
+
+                <div class="mensagem-erro">
+
+                    Nenhuma reserva com chegada prevista
+                    para <strong>{{ data_consulta }}</strong>.
+
+                </div>
+
+            {% endif %}
+
+
+        {% endif %}
+
+
+        <!-- Voltar ao menu -->
+
+        <div class="button-container">
+
+            <a href="/" class="menu-button">
+                Voltar ao Menu
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

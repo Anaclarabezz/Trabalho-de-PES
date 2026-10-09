@@ -343,8 +343,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# Ponto de entrada da aplicação
-if __name__ == '__main__':
-    # Inicia o servidor Flask em modo de desenvolvimento
-    app.run(debug=True)
