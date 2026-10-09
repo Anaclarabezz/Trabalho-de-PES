@@ -33,8 +33,6 @@
 
        <div class="form-row">
 
-    <div class="form-row">
-
 <label>Quantidade de Hóspedes</label>
 
 <input
@@ -42,10 +40,21 @@ type="number"
 id="hospedes"
 name="hospedes"
 min="1"
-max="10"
+max="6"
 placeholder="Quantidade de hóspedes"
 required>
 
+</div>
+
+<div class="form-row">
+    <label>Crianças (menos de 5 anos - Grátis)</label>
+    <input
+        type="number"
+        id="criancas"
+        name="criancas"
+        min="0"
+        max="6"
+        value="0">
 </div>
 
 
@@ -55,7 +64,7 @@ required>
 
 <select
 id="quarto"
-name="quarto"
+name="tipoquarto"
 required>
 
 <option value="">
@@ -98,6 +107,21 @@ readonly>
                 placeholder="Ex.: cama de casal, quarto silencioso, acessibilidade..."></textarea>
         </div>
 
+        <div class="form-row">
+
+            <label>Metodo de pagamento</label>
+            <select
+                    id="metododepamento"
+                    name="metododepagamento"
+                    required>
+                <option value="" disabled selected>Selecione uma opção</option>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Cartão de Débito">Cartão de Débito</option>
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+        </div>
+
         <div class="button-container">
             <button type="submit">Confirmar Reserva</button>
 
@@ -123,253 +147,145 @@ readonly>
 </div>
 
 <script>
-
-const hospedes = document.getElementById("hospedes");
-const quarto = document.getElementById("quarto");
-const valor = document.getElementById("valorDiaria");
-
-const checkin = document.querySelector('input[name="checkin"]');
-const checkout = document.querySelector('input[name="checkout"]');
-
-const valorTotal = document.getElementById("valorTotal");
-
-
-// coloque aqui fora para ficar disponível em todo o script
-let precoDiaria = 0;
-
-
-
-hospedes.addEventListener("input", function(){
-
-
-let pessoas = Number(this.value);
-
-
-quarto.innerHTML="";
-
-valor.value="";
-valorTotal.value="";
-
-
-if(pessoas <=0){
-    return;
-}
-
-
-
-let opcoes=[];
-
-
-// 1 solteiro por pessoa
-if(pessoas <=4){
-
-opcoes.push([
-pessoas+" Quartos Solteiro",
-pessoas*100
-]);
-
-}
-
-
-
-// quarto casal
-if(pessoas % 2 == 0 && pessoas/2 <=3){
-
-opcoes.push([
-(pessoas/2)+" Quartos Casal",
-(pessoas/2)*320
-]);
-
-}
-
-
-
-// quarto triplo
-if(pessoas <=3){
-
-opcoes.push([
-"1 Quarto Triplo",
-450
-]);
-
-}
-
-
-
-// suíte master
-if(pessoas <=4){
-
-opcoes.push([
-"1 Suíte Master",
-569
-]);
-
-}
-
-
-
-// combinações
-
-if(pessoas==4){
-
-opcoes.push([
-"1 Triplo + 1 Solteiro",
-550
-]);
-
-}
-
-
-
-if(pessoas==5){
-
-opcoes.push([
-"1 Suíte Master + 1 Solteiro",
-669
-]);
-
-
-opcoes.push([
-"1 Triplo + 1 Casal",
-770
-]);
-
-}
-
-
-
-if(pessoas==6){
-
-opcoes.push([
-"2 Quartos Triplos",
-900
-]);
-
-
-opcoes.push([
-"3 Quartos Casal",
-960
-]);
-
-}
-
-
-
-
-opcoes.forEach(function(item){
-
-
-let option=document.createElement("option");
-
-
-option.value=item[0];
-
-
-// guarda o preço da opção
-option.dataset.preco=item[1];
-
-
-option.text=
-item[0]+" - R$ "+item[1]+",00/dia";
-
-
-quarto.appendChild(option);
-
-
-});
-
-
-});
-
-
-
-
-// quando escolher o quarto
-quarto.addEventListener("change",function(){
-
-
-precoDiaria =
-Number(this.options[this.selectedIndex].dataset.preco);
-
-
-
-valor.value =
-"R$ "+precoDiaria.toFixed(2).replace(".",",")+"/dia";
-
-
-
-calcularTotal();
-
-
-
-});
-
-
-
-
-
-function calcularTotal(){
-
-
-if(
-checkin.value=="" ||
-checkout.value=="" ||
-precoDiaria==0
-){
-
-valorTotal.value="";
-
-return;
-
-}
-
-
-
-let dataEntrada = new Date(checkin.value);
-
-let dataSaida = new Date(checkout.value);
-
-
-
-let tempo = dataSaida - dataEntrada;
-
-
-
-let quantidadeDias =
-tempo/(1000*60*60*24);
-
-
-
-if(quantidadeDias <=0){
-
-valorTotal.value="Data inválida";
-
-return;
-
-}
-
-
-
-let total =
-precoDiaria * quantidadeDias;
-
-
-
-valorTotal.value =
-"R$ "+total.toFixed(2).replace(".",",");
-
-
-
-}
-
-
-
-
-checkin.addEventListener("change", calcularTotal);
-
-checkout.addEventListener("change", calcularTotal);
-
-
+    const hospedes = document.getElementById("hospedes");
+    const criancas = document.getElementById("criancas");
+    const quarto = document.getElementById("quarto");
+    const valor = document.getElementById("valorDiaria");
+    const checkin = document.querySelector('input[name="checkin"]');
+    const checkout = document.querySelector('input[name="checkout"]');
+    const valorTotal = document.getElementById("valorTotal");
+
+    let precoDiaria = 0;
+
+    function atualizarOpcoes() {
+    let pagantes = Number(hospedes.value) || 0;
+    let qtdCriancas = Number(criancas.value) || 0;
+    let totalPessoas = pagantes + qtdCriancas; // Capacidade total necessária no quarto
+
+    quarto.innerHTML = "";
+    valor.value = "";
+    valorTotal.value = "";
+
+    // Se não houver adultos pagantes informados
+    if (pagantes <= 0) {
+        let opt = document.createElement("option");
+        opt.value = "";
+        opt.text = "Informe a quantidade de hóspedes";
+        quarto.appendChild(opt);
+        return;
+    }
+
+    // Opção padrão inicial no menu
+    let optDefault = document.createElement("option");
+    optDefault.value = "";
+    optDefault.text = "Selecione uma opção de quarto...";
+    quarto.appendChild(optDefault);
+
+    let opcoes = [];
+
+    // Taxa diária de R$ 50,00 cobrada apenas por adulto pagante
+    let taxaPagantes = pagantes * 50;
+
+    // Quartos Solteiro (R$ 70,00 fixo por quarto)
+    if (totalPessoas <= 4) {
+        opcoes.push([
+            totalPessoas + " Quartos Solteiro",
+            (totalPessoas * 70) + taxaPagantes
+        ]);
+    }
+
+    // Quartos Casal (R$ 120,00 fixo por quarto)
+    if (totalPessoas % 2 == 0 && totalPessoas / 2 <= 3) {
+        opcoes.push([
+            (totalPessoas / 2) + " Quartos Casal",
+            ((totalPessoas / 2) * 120) + taxaPagantes
+        ]);
+    }
+
+    // Quarto Triplo (R$ 180,00 fixo)
+    if (totalPessoas <= 3) {
+        opcoes.push([
+            "1 Quarto Triplo",
+            180 + taxaPagantes
+        ]);
+    }
+
+    // Suíte Master (R$ 250,00 fixo)
+    if (totalPessoas <= 4) {
+        opcoes.push([
+            "1 Suíte Master",
+            250 + taxaPagantes
+        ]);
+    }
+
+    // Combinações para 4 pessoas (Triplo 180 + Solteiro 70 = 250)
+    if (totalPessoas == 4) {
+        opcoes.push(["1 Triplo + 1 Solteiro", 250 + taxaPagantes]);
+    }
+
+    // Combinações para 5 pessoas
+    if (totalPessoas == 5) {
+        opcoes.push(["1 Suíte Master + 1 Solteiro", 320 + taxaPagantes]);
+        opcoes.push(["1 Triplo + 1 Casal", 300 + taxaPagantes]);
+    }
+
+    // Combinações para 6 pessoas
+    if (totalPessoas == 6) {
+        opcoes.push(["2 Quartos Triplos", 360 + taxaPagantes]);
+        opcoes.push(["3 Quartos Casal", 360 + taxaPagantes]);
+    }
+
+    opcoes.forEach(function(item) {
+        let option = document.createElement("option");
+        option.value = item[0];
+        option.dataset.preco = item[1];
+        option.text = item[0] + " - R$ " + item[1] + ",00/dia";
+        quarto.appendChild(option);
+    });
+    }
+
+    hospedes.addEventListener("input", atualizarOpcoes);
+    criancas.addEventListener("input", atualizarOpcoes);
+
+    quarto.addEventListener("change", function() {
+    if (this.selectedIndex <= 0 || !this.options[this.selectedIndex].dataset.preco) {
+        valor.value = "";
+        valorTotal.value = "";
+        precoDiaria = 0;
+        return;
+    }
+    precoDiaria = Number(this.options[this.selectedIndex].dataset.preco);
+    valor.value = "R$ " + precoDiaria.toFixed(2).replace(".", ",") + "/dia";
+    calcularTotal();
+    });
+
+    function calcularTotal() {
+    if (checkin.value == "" || checkout.value == "" || precoDiaria == 0) {
+        valorTotal.value = "";
+        return;
+    }
+
+    let dataEntrada = new Date(checkin.value);
+    let dataSaida = new Date(checkout.value);
+    let tempo = dataSaida - dataEntrada;
+    let quantidadeDias = tempo / (1000 * 60 * 60 * 24);
+
+    if (quantidadeDias <= 0) {
+        valorTotal.value = "Data inválida";
+        return;
+    }
+
+    let total = precoDiaria * quantidadeDias;
+    valorTotal.value = "R$ " + total.toFixed(2).replace(".", ",");
+    }
+
+    checkin.addEventListener("change", calcularTotal);
+    checkout.addEventListener("change", calcularTotal);
+
+</script>
+
+</body>
+</html>
 
 </script>
 
